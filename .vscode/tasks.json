@@ -1,0 +1,97 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe build active file",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "args": [
+                "-std=c++20",
+                "-pthread",
+                "-Wall",
+                "-Wextra",
+                "-Wshadow",
+                "-Wnon-virtual-dtor",
+                "-pedantic",
+                "-Wold-style-cast",
+                "-Wcast-align",
+                "-Wunused",
+                "-Woverloaded-virtual",
+                "-Wpedantic",
+                "-Wconversion",
+                "-Wsign-conversion",
+                "-Wmisleading-indentation",
+                "-Wduplicated-cond",
+                "-Wduplicated-branches",
+                "-Wlogical-op",
+                "-Wnull-dereference",
+                "-Wuseless-cast",
+                "-Wdouble-promotion",
+                "-Wformat=2",
+                "-fno-exceptions",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${fileDirname}/*.cpp",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Build in Windows"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc build active file - linux",
+            "command": "/usr/bin/g++-10",
+            "args": [
+                "-std=c++20",
+                "-pthread",
+                "-Wall",
+                "-Wextra",
+                "-Wshadow",
+                "-Wnon-virtual-dtor",
+                "-pedantic",
+                "-Wold-style-cast",
+                "-Wcast-align",
+                "-Wunused",
+                "-Woverloaded-virtual",
+                "-Wpedantic",
+                "-Wconversion",
+                "-Wsign-conversion",
+                "-Wmisleading-indentation",
+                "-Wduplicated-cond",
+                "-Wduplicated-branches",
+                "-Wlogical-op",
+                "-Wnull-dereference",
+                "-Wuseless-cast",
+                "-Wdouble-promotion",
+                "-Wformat=2",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${fileDirname}/*.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": "absolute"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "g++-10 linux"
+        }
+    ],
+    "version": "2.0.0"
+}
