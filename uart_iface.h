@@ -3,24 +3,34 @@
 #include <span>
 #include <utility>
 
-#include "uart_api.h"
+#include "uart_impl.h"
+#include "hw_iface.h"
 
 namespace UART
 {
 
 class Iface
 {
-    using h_impl_t = int;
-    h_impl_t h;
+    using hw_iface_t = HardwarePeripheralWrapper<Impl, uart_n_hw_ports>;
+    using hw_handle_t = hw_iface_t::handle_t;
+    hw_handle_t h{nullptr};
 
 public:
     Iface(UART_ID id, UartConfig config = UartConfig{})
     {
-        // Check if this ID is already constructed somewhere
-        // If so, check the config is the same
-            // If not, error (is_valid = false)
-            // If so, return a copy to the same instance (is_valid = true)
-        // If not, construct it (is_valid = true)
+        const auto idx = id_to_idx(id);
+
+        if (hw_iface_t::is_constructed(idx))
+        {
+            auto existing_handle = hw_iface_t::get_handle(idx);
+
+            if (existing_handle->config() == config)
+                h = std::move(existing_handle);
+            //else
+            //    "already exists with different config"
+        }
+        else
+            h = hw_iface_t::construct_instance(idx, id, config);
     }
 
     operator bool() const { return h ? true : false; }
@@ -33,7 +43,7 @@ public:
     template <class T>
     bool send(std::span<const T> data)
     {
-        return h->send(std::foward<std::span<const T>>(data));
+        return h->send(std::forward<std::span<const T>>(data));
     }
 
     template <class T>
@@ -42,8 +52,20 @@ public:
         return h->receive(std::forward<std::span<T>>(data));
     }
 
-    UART_ID     id()     const { return h->id; }
-    UartConfig  config() const { return h->cfg; }
+    UART_ID     id()     const { return h->id(); }
+    UartConfig  config() const { return h->config(); }
+    auto&       mutex()  const { return h->mutx; }
+
+    [[nodiscard]] static auto is_constructed_all(void)
+    {
+        return hw_iface_t::is_constructed();
+    }
+
+private:
+    [[nodiscard]] static constexpr std::size_t id_to_idx(UART_ID id)
+    {
+        return static_cast<std::size_t>(id);
+    }
 };
 
 

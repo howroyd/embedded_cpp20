@@ -11,16 +11,16 @@ namespace UART
 
 class Impl
 {
-    UART_ID id;
-    UartConfig cfg;
+    UART_ID _id;
+    UartConfig _cfg;
     bool initialised = false;
-    mutable std::mutex mutx{};
 
 public:
+    mutable std::mutex mutx{};
 
     Impl() = delete;
     Impl(UART_ID uart_id, UartConfig uart_config)
-        : id{uart_id}, cfg{uart_config}
+        : _id{uart_id}, _cfg{uart_config}
     {
         initialised = init();
     }
@@ -51,7 +51,7 @@ public:
             return false;
 
         std::scoped_lock lock(mutx);
-        return api_uart_send(id, const uint8_t* buf, uint16_t len);
+        return api_uart_send(_id, reinterpret_cast<const uint8_t*>(data.data()), len);
     }
 
     template <class T>
@@ -63,8 +63,11 @@ public:
             return false;
 
         std::scoped_lock lock(mutx);
-        return api_uart_receive(id, reinterpret_cast<uint8_t*>(data.data()), &len);
+        return api_uart_receive(_id, reinterpret_cast<uint8_t*>(data.data()), &len);
     }
+
+    UART_ID     id()     const { return _id; }
+    UartConfig  config() const { return _cfg; }
 
 };
 
